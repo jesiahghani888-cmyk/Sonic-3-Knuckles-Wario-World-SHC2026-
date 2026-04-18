@@ -1,0 +1,17 @@
+{
+	"eggman-lrz-intro-00": { "File": "boss5.png", "Rect": "0,0,56,56", "Center": "28,28" },
+	"eggman-lrz-intro-01": { "File": "boss5.png", "Rect": "56,0,56,56", "Center": "28,28" },
+	
+	"eggman-laugh-lrz-intro-01": { "File": "boss5.png", "Rect": "0,56,56,56", "Center": "28,28" },
+	"eggman-laugh-lrz-intro-00": { "File": "boss5.png", "Rect": "56,56,56,56", "Center": "28,28" },
+	"eggman-laugh-lrz-intro-02": { "File": "boss5b.png", "Rect": "0,56,56,56", "Center": "28,28" },
+	"eggman-laugh-lrz-intro-03": { "File": "boss5b.png", "Rect": "56,56,56,56", "Center": "28,28" },
+	
+	"eggman-lrz-intro-00-png": { "File": "boss5.png", "Rect": "0,0,56,56", "Center": "28,28" },
+	"eggman-lrz-intro-01-png": { "File": "boss5.png", "Rect": "56,0,56,56", "Center": "28,28" },
+	
+	"eggman-laugh-lrz-intro-00-png": { "File": "boss5.png", "Rect": "0,56,56,56", "Center": "28,28" },
+	"eggman-laugh-lrz-intro-01-png": { "File": "boss5.png", "Rect": "56,56,56,56", "Center": "28,28" },
+	"eggman-laugh-lrz-intro-02-png": { "File": "boss5b.png", "Rect": "0,56,56,56", "Center": "28,28" },
+	"eggman-laugh-lrz-intro-03-png": { "File": "boss5b.png", "Rect": "56,56,56,56", "Center": "28,28" }
+}

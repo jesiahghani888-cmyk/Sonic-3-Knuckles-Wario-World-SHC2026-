@@ -1,0 +1,11 @@
+{	
+	"eggman-lrz-blue-12": { "File": "boss2.png", "Rect": "0,0,26,18", "Center": "16,10" },
+	
+	"eggman-fbz-blue-04": { "File": "boss2.png", "Rect": "0,18,32,16", "Center": "16,8" },
+	"eggman-fbz-blue-05": { "File": "boss2.png", "Rect": "32,18,32,16", "Center": "16,8" },
+	
+	"eggman-lrz-blue-12-png": { "File": "boss2.png", "Rect": "0,0,26,18", "Center": "16,10" },
+	
+	"eggman-fbz-blue-04-png": { "File": "boss2.png", "Rect": "0,18,32,16", "Center": "16,8" },
+	"eggman-fbz-blue-05-png": { "File": "boss2.png", "Rect": "32,18,32,16", "Center": "16,8" }
+}

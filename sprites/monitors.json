@@ -1,0 +1,7 @@
+{
+	"monitor_icon_eggman":  { "File": "monitor.png", "Rect": "0,0,16,16", "Center": "8,6" },
+	"monitor_icon_eggman-00":  { "File": "monitor.png", "Rect": "0,0,16,16", "Center": "8,6" },
+	"monitor_icon_eggman-02":  { "File": "monitor.png", "Rect": "0,0,16,16", "Center": "8,6" },
+	"monitor_icon_eggman-01":  { "File": "monitor.png", "Rect": "16,0,16,16", "Center": "8,6" },
+	"monitor_icon_eggman-03":  { "File": "monitor.png", "Rect": "16,0,16,16", "Center": "8,6" }
+}

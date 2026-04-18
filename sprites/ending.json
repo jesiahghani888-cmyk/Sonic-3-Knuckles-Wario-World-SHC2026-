@@ -1,0 +1,7 @@
+{
+	"eggman-ending-blue-00": { "File": "ending.png", "Rect": "0,0,40,56", "Center": "20,28" },
+	"eggman-ending-blue-01": { "File": "ending.png", "Rect": "40,0,40,56", "Center": "20,28" },
+	
+	"eggman-ending-blue-00-png": { "File": "ending.png", "Rect": "0,0,40,56", "Center": "20,28" },
+	"eggman-ending-blue-01-png": { "File": "ending.png", "Rect": "40,0,40,56", "Center": "20,28" }
+}

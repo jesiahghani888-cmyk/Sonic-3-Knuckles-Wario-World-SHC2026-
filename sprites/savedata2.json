@@ -1,0 +1,11 @@
+{
+	"eggman-delete-10": { "File": "savedata2.png", "Rect": "0,0,48,72", "Center": "28,72" },
+	"eggman-delete-11": { "File": "savedata2.png", "Rect": "48,0,48,72", "Center": "28,72" },
+	"eggman-delete-12": { "File": "savedata2.png", "Rect": "96,0,48,72", "Center": "28,72" },
+	"eggman-delete-13": { "File": "savedata2.png", "Rect": "144,0,48,72", "Center": "28,72" },
+	
+	"eggman-delete-10-png": { "File": "savedata2.png", "Rect": "0,0,48,72", "Center": "28,72" },
+	"eggman-delete-11-png": { "File": "savedata2.png", "Rect": "48,0,48,72", "Center": "28,72" },
+	"eggman-delete-12-png": { "File": "savedata2.png", "Rect": "96,0,48,72", "Center": "28,72" },
+	"eggman-delete-13-png": { "File": "savedata2.png", "Rect": "144,0,48,72", "Center": "28,72" }
+}

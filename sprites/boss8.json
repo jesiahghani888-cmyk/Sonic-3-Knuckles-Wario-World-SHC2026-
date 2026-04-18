@@ -1,0 +1,15 @@
+{
+	"eggmanlost1": { "File": "boss8.png", "Rect": "0,0,64,64", "Center": "32,32" },
+	"eggmanlost2": { "File": "boss8.png", "Rect": "64,0,64,64", "Center": "32,32" },
+	"eggmanlost3": { "File": "boss8.png", "Rect": "128,0,64,64", "Center": "32,32" },
+	"eggmanlost4": { "File": "boss8.png", "Rect": "0,64,64,64", "Center": "32,32" },
+	"eggmanlost5": { "File": "boss8.png", "Rect": "64,64,64,64", "Center": "32,32" },
+	"eggmanlost6": { "File": "boss8.png", "Rect": "128,64,64,64", "Center": "32,32" },
+	
+	"eggmanlost1-png": { "File": "boss8.png", "Rect": "0,0,64,64", "Center": "32,32" },
+	"eggmanlost2-png": { "File": "boss8.png", "Rect": "64,0,64,64", "Center": "32,32" },
+	"eggmanlost3-png": { "File": "boss8.png", "Rect": "128,0,64,64", "Center": "32,32" },
+	"eggmanlost4-png": { "File": "boss8.png", "Rect": "0,64,64,64", "Center": "32,32" },
+	"eggmanlost5-png": { "File": "boss8.png", "Rect": "64,64,64,64", "Center": "32,32" },
+	"eggmanlost6-png": { "File": "boss8.png", "Rect": "128,64,64,64", "Center": "32,32" }
+}

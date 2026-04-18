@@ -1,0 +1,23 @@
+{
+	"eggman-delete-d8": { "File": "savedata.png", "Rect": "0,0,48,72", "Center": "28,72" },
+	"eggman-delete-d9": { "File": "savedata.png", "Rect": "48,0,48,72", "Center": "28,72" },
+	"eggman-delete-da": { "File": "savedata.png", "Rect": "96,0,48,72", "Center": "28,72" },
+	"eggman-delete-db": { "File": "savedata.png", "Rect": "48,0,48,72", "Center": "28,72" },
+	"eggman-delete-dc": { "File": "savedata.png", "Rect": "144,0,48,72", "Center": "28,72" },	
+	"eggman-delete-e8": { "File": "savedata.png", "Rect": "0,72,48,72", "Center": "28,72" },
+	"eggman-delete-e9": { "File": "savedata.png", "Rect": "48,72,48,72", "Center": "28,72" },
+	"eggman-delete-ea": { "File": "savedata.png", "Rect": "96,72,48,72", "Center": "28,72" },
+	"eggman-delete-eb": { "File": "savedata.png", "Rect": "48,72,48,72", "Center": "28,72" },
+	"eggman-delete-ec": { "File": "savedata.png", "Rect": "144,72,48,72", "Center": "28,72" },
+	
+	"eggman-delete-d8-png": { "File": "savedata.png", "Rect": "0,0,48,72", "Center": "28,72" },
+	"eggman-delete-d9-png": { "File": "savedata.png", "Rect": "48,0,48,72", "Center": "28,72" },
+	"eggman-delete-da-png": { "File": "savedata.png", "Rect": "96,0,48,72", "Center": "28,72" },
+	"eggman-delete-db-png": { "File": "savedata.png", "Rect": "48,0,48,72", "Center": "28,72" },
+	"eggman-delete-dc-png": { "File": "savedata.png", "Rect": "144,0,48,72", "Center": "28,72" },	
+	"eggman-delete-e8-png": { "File": "savedata.png", "Rect": "0,72,48,72", "Center": "28,72" },
+	"eggman-delete-e9-png": { "File": "savedata.png", "Rect": "48,72,48,72", "Center": "28,72" },
+	"eggman-delete-ea-png": { "File": "savedata.png", "Rect": "96,72,48,72", "Center": "28,72" },
+	"eggman-delete-eb-png": { "File": "savedata.png", "Rect": "48,72,48,72", "Center": "28,72" },
+	"eggman-delete-ec-png": { "File": "savedata.png", "Rect": "144,72,48,72", "Center": "28,72" }
+}

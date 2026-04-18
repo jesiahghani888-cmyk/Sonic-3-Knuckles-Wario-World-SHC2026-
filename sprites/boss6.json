@@ -1,0 +1,15 @@
+{
+	"eggman-blue-brn-04": { "File": "boss6.png", "Rect": "0,0,34,16", "Center": "17,8" },
+	"eggman-blue-brn-05": { "File": "boss6.png", "Rect": "34,0,34,16", "Center": "17,8" },
+	"eggman-blue-brn-06": { "File": "boss6.png", "Rect": "0,16,34,16", "Center": "17,8" },
+	"eggman-blue-brn-07": { "File": "boss6.png", "Rect": "34,16,34,16", "Center": "17,8" },
+	"eggman-blue-brn-02": { "File": "boss6.png", "Rect": "0,32,34,22", "Center": "17,14" },
+	"eggman-blue-brn-03": { "File": "boss6.png", "Rect": "34,32,34,22", "Center": "17,14" },
+	
+	"eggman-blue-brn-04-png": { "File": "boss6.png", "Rect": "0,0,34,16", "Center": "17,8" },
+	"eggman-blue-brn-05-png": { "File": "boss6.png", "Rect": "34,0,34,16", "Center": "17,8" },
+	"eggman-blue-brn-06-png": { "File": "boss6.png", "Rect": "0,16,34,16", "Center": "17,8" },
+	"eggman-blue-brn-07-png": { "File": "boss6.png", "Rect": "34,16,34,16", "Center": "17,8" },
+	"eggman-blue-brn-02-png": { "File": "boss6.png", "Rect": "0,32,34,22", "Center": "17,14" },
+	"eggman-blue-brn-03-png": { "File": "boss6.png", "Rect": "34,32,34,22", "Center": "17,14" }
+}

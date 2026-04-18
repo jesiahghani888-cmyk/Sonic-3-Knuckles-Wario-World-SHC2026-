@@ -1,0 +1,5 @@
+{
+	"eggman-zoomout-blue": { "File": "boss7.png", "Rect": "0,0,64,64", "Center": "0,0" },
+	"eggman-zoomout-blue-00": { "File": "boss7.png", "Rect": "0,0,64,64", "Center": "0,0" },
+	"eggman-zoomout-blue-01": { "File": "boss7.png", "Rect": "64,0,64,64", "Center": "0,0" }
+}

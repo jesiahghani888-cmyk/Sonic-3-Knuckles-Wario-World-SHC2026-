@@ -1,0 +1,32 @@
+{
+	"character-eggman-blue-00": { "File": "character-eggman.png", "Rect": "0,0,64,56", "Center": "32,24" },
+	"character-eggman-blue-01": { "File": "character-eggman.png", "Rect": "64,0,64,56", "Center": "32,24" },
+	"character-eggman-blue-02": { "File": "character-eggman.png", "Rect": "128,0,64,56", "Center": "32,24" },
+	"character-eggman-blue-03": { "File": "character-eggman.png", "Rect": "192,0,64,56", "Center": "32,24" },
+	
+	"character-eggman-blue-04": { "File": "character-eggman.png", "Rect": "0,56,64,56", "Center": "32,24" },
+	"character-eggman-blue-05": { "File": "character-eggman.png", "Rect": "64,56,64,56", "Center": "32,24" },
+	"character-eggman-blue-06": { "File": "character-eggman.png", "Rect": "128,56,64,56", "Center": "32,24" },
+	"character-eggman-blue-07": { "File": "character-eggman.png", "Rect": "192,56,64,56", "Center": "32,24" },
+	
+	"character-eggman-blue-00-png": { "File": "character-eggman.png", "Rect": "0,0,64,56", "Center": "32,24" },
+	"character-eggman-blue-01-png": { "File": "character-eggman.png", "Rect": "64,0,64,56", "Center": "32,24" },
+	"character-eggman-blue-02-png": { "File": "character-eggman.png", "Rect": "128,0,64,56", "Center": "32,24" },
+	"character-eggman-blue-03-png": { "File": "character-eggman.png", "Rect": "192,0,64,56", "Center": "32,24" },
+	
+	"character-eggman-blue-04-png": { "File": "character-eggman.png", "Rect": "0,56,64,56", "Center": "32,24" },
+	"character-eggman-blue-05-png": { "File": "character-eggman.png", "Rect": "64,56,64,56", "Center": "32,24" },
+	"character-eggman-blue-06-png": { "File": "character-eggman.png", "Rect": "128,56,64,56", "Center": "32,24" },
+	"character-eggman-blue-07-png": { "File": "character-eggman.png", "Rect": "192,56,64,56", "Center": "32,24" },
+	
+	//For Misc Fixes and Tweaks
+	"robotnik_cont_00": { "File": "character-eggman.png", "Rect": "0,0,64,56", "Center": "32,24" },
+	"robotnik_cont_01": { "File": "character-eggman.png", "Rect": "64,0,64,56", "Center": "32,24" },
+	"robotnik_cont_02": { "File": "character-eggman.png", "Rect": "128,0,64,56", "Center": "32,24" },
+	"robotnik_cont_03": { "File": "character-eggman.png", "Rect": "192,0,64,56", "Center": "32,24" },
+	
+	"robotnik_cont_00-png": { "File": "character-eggman.png", "Rect": "0,0,64,56", "Center": "32,24" },
+	"robotnik_cont_01-png": { "File": "character-eggman.png", "Rect": "64,0,64,56", "Center": "32,24" },
+	"robotnik_cont_02-png": { "File": "character-eggman.png", "Rect": "128,0,64,56", "Center": "32,24" },
+	"robotnik_cont_03-png": { "File": "character-eggman.png", "Rect": "192,0,64,56", "Center": "32,24" }
+}

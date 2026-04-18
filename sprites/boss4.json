@@ -1,0 +1,7 @@
+{
+	"eggman-aiz-intro-00": { "File": "boss4.png", "Rect": "0,0,64,56", "Center": "32,28" },
+	"eggman-aiz-intro-01": { "File": "boss4.png", "Rect": "64,0,64,56", "Center": "32,28" },
+	
+	"eggman-aiz-intro-00-png": { "File": "boss4.png", "Rect": "0,0,64,56", "Center": "32,28" },
+	"eggman-aiz-intro-01-png": { "File": "boss4.png", "Rect": "64,0,64,56", "Center": "32,28" }
+}

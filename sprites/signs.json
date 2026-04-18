@@ -1,0 +1,4 @@
+{
+	"eggman-goal-sign-03": { "File": "sign.png", "Rect": "0,0,48,32", "Center": "24,16" },
+	"eggman-goal-sign-13": { "File": "sign.png", "Rect": "0,32,48,32", "Center": "24,16" }
+}
