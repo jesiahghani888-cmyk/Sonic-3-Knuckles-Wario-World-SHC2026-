@@ -1,252 +1,201 @@
 #if STANDALONE
 
-global u8 EggmanBlue.bossInit = 0
-global u8 EggmanBlue.laughTimer = 0
-global s16 EggmanBlue.lastXPos = 0
-global u8 EggmanBlue.golemRemaining_hits = 0
-global u16 EggmanBlue.lastFrame = 0
+// Wario World (SHC2026) - Main Script
+// Replaces Eggman with Wario
 
-function void EggmanBlue.setLaughTimerForEvent(u8 value) 
+global u8 Wario.bossInit = 0
+global u8 Wario.laughTimer = 0
+global s16 Wario.lastXPos = 0
+global u8 Wario.golemRemaining_hits = 0
+global u16 Wario.lastFrame = 0
+
+// Helper functions for timing and metronome
+function u8 Wario.getMetronome()
 {
-	if(EggmanBlue.disableEventLaugh != 1) 
+	return (level.framecounter >> 3) & 0x01
+}
+
+function u8 Wario.getFreezableMetronome()
+{
+	return (global.game_paused) ? 0 : Wario.getMetronome()
+}
+
+function bool Wario.showRegular()
+{
+	bool gameOverCondition = (global.time_over == 0 && lives_counter > 0)
+	return (Wario.laughTimer <= 0 && gameOverCondition)
+}
+
+function void Wario.decreaseTimer()
+{
+	if (Wario.laughTimer > 0) 
 	{
-		EggmanBlue.laughTimer = value
+		u16 fc = level.framecounter
+		if (Wario.lastFrame != fc)
+		{
+			Wario.lastFrame = fc
+			--Wario.laughTimer
+		}
 	}
 }
 
-function bool EggmanBlue.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+// Main sprite replacement hook
+function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {	
-	//Normal Eggmobile Bosses
-	if(objA0.update_address == 0x067b66 || objA0.update_address == 0x067aca || objA0.update_address == 0x067c38 || objA0.update_address == 0x067cd2)
-    {
-		if(objA0.mapping_offset != 0x0681d4) //Not Eggrobo
+	// Normal Eggmobile Bosses
+	if (objA0.update_address == 0x067b66 || objA0.update_address == 0x067aca || objA0.update_address == 0x067c38 || objA0.update_address == 0x067cd2)
+	{
+		if (objA0.mapping_offset != 0x0681d4) // Not Eggrobo
 		{
 			u64 key = 0x00
 			u8 animationSprite = objA0.animation.sprite
-			if(objA0.animation.sprite < 0x02)
+			
+			if (objA0.animation.sprite < 0x02)
 			{
-				EggmanBlue.lastXPos = 0
-				if(EggmanBlue.showRegular())
+				Wario.lastXPos = 0
+				if (Wario.showRegular())
 				{
-					
+					// Special case for MGZ2 boss
 					if (global.zone_act == 0x0601 && camera.position.y.u16 == 0x0668)
-						key = stringformat("eggman-blue-%02x", EggmanBlue.getFreezableMetronome())
-					//Egg Golem Escape
-					else if (global.zone_act == 0x0801 && EggmanBlue.golemRemaining_hits == 0 && EggmanBlue.burnType > 0) 
-					{
-						u8 frame = EggmanBlue.getFreezableMetronome()
-						key = stringformat("eggman-blue-brn-%02x", (frame + (2 * EggmanBlue.burnType)))
-					}
+						key = stringformat("eggman-blue-%02x", Wario.getFreezableMetronome())
 					else
 						key = stringformat("eggman-blue-%02x", animationSprite)
 				}
 				else
 				{
-					key = stringformat("eggman-laugh-blue-%02x", (EggmanBlue.getMetronome() + (EggmanBlue.laughStyle * 0x02)))
+					// Laughing animation
+					key = stringformat("eggman-laugh-blue-%02x", Wario.getMetronome())
 				}
 			}
-			else if(objA0.animation.sprite == 0x03)
+			else if (objA0.animation.sprite == 0x03)
 			{
 				s16 xPos = camera.position.x.u16 + px
-				if(EggmanBlue.burnType > 0 && EggmanBlue.lastXPos != 0)
-				{
-					if((objA0.render_flags & render_flag.FLIP_X) ? (xPos > EggmanBlue.lastXPos) : (xPos < EggmanBlue.lastXPos))
-					{
-						if(global.zone_act != 0x0701 || camera.position.x.u16 < 0x4000 || camera.position.x.u16 > 0x4400) 
-						{
-							u8 frame = EggmanBlue.getFreezableMetronome()
-							key = stringformat("eggman-blue-brn-%02x", (frame + (2 * EggmanBlue.burnType)))
-						}
-					}
-				}
-				if(key == 0x00)
-				{
-					key = stringformat("eggman-blue-%02x", animationSprite)
-				}
-				EggmanBlue.lastXPos = xPos
+				key = stringformat("eggman-blue-%02x", animationSprite)
+				Wario.lastXPos = xPos
 			}
 			else 
 			{
-				if(objA0.animation.sprite == 0x02)
+				if (objA0.animation.sprite == 0x02)
 				{
-					animationSprite += EggmanBlue.hurtAlign
-					if(global.zone_act != 0x00160 || camera.position.x.u16 < 0x001700)
-						EggmanBlue.laughTimer = 0
+					Wario.laughTimer = 0
 				}
 				key = stringformat("eggman-blue-%02x", animationSprite)
 			}
-			if(EggmanBlue.spritesType)
-			{
-				key = stringformat("%s-png", key)
-			}
-			if(key != 0x00 && Renderer.hasCustomSprite(key))
+			
+			if (key != 0x00 && Renderer.hasCustomSprite(key))
 			{
 				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-				Renderer.drawCustomSprite(key, px, py, EggmanBlue.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
-				return true
-			}
-		}
-    }
-	
-	//FBZ2 Second Boss
-	else if (objA0.update_address == 0x067b96)
-	{
-		if(!isMainCharacter(CHARACTER_KNUCKLES))
-		{
-			u64 key = 0x00
-			if(objA0.animation.sprite < 0x02)
-			{
-				EggmanBlue.lastXPos = 0
-				if(EggmanBlue.showRegular())
-					key = stringformat("eggman-fbz-blue-%02x", (objA0.animation.sprite + EggmanBlue.getFreezableMetronome() * 0x04))
-				else 
-					key = stringformat("eggman-laugh-fbz-blue-%02x", (EggmanBlue.getMetronome() + (EggmanBlue.laughStyle * 0x02)))
-			}
-			else if(objA0.animation.sprite == 0x03)
-			{
-				s16 xPos = camera.position.x.u16 + px
-				if(EggmanBlue.burnType > 0 && EggmanBlue.lastXPos != 0)
-				{
-					if((objA0.render_flags & render_flag.FLIP_X) ? (xPos > EggmanBlue.lastXPos) : (xPos < EggmanBlue.lastXPos))
-					{
-						u8 frame = EggmanBlue.getFreezableMetronome()
-						key = stringformat("eggman-blue-brn-%02x", (frame + (2 * EggmanBlue.burnType)))
-					}
-				}
-				if(key == 0x00)
-				{
-					key = stringformat("eggman-fbz-blue-%02x", objA0.animation.sprite)
-				}
-				EggmanBlue.lastXPos = xPos
-			}
-			else 
-			{
-				if(objA0.animation.sprite == 0x02)
-				{
-					EggmanBlue.laughTimer = 0
-				}
-				key = stringformat("eggman-fbz-blue-%02x", objA0.animation.sprite)
-			}
-			if(EggmanBlue.spritesType)
-			{
-				key = stringformat("%s-png", key)
-			}
-			if(key != 0x00 && Renderer.hasCustomSprite(key))
-			{
-				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-				Renderer.drawCustomSprite(key, px, py, EggmanBlue.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+				Renderer.drawCustomSprite(key, px, py, 0x10, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
 				return true
 			}
 		}
 	}
 	
-	//LRZ2 Boss
+	// FBZ2 Second Boss
+	else if (objA0.update_address == 0x067b96)
+	{
+		if (!isMainCharacter(CHARACTER_KNUCKLES))
+		{
+			u64 key = 0x00
+			if (objA0.animation.sprite < 0x02)
+			{
+				Wario.lastXPos = 0
+				if (Wario.showRegular())
+					key = stringformat("eggman-fbz-blue-%02x", (objA0.animation.sprite + Wario.getFreezableMetronome() * 0x04))
+				else 
+					key = stringformat("eggman-laugh-fbz-blue-%02x", Wario.getMetronome())
+			}
+			else 
+			{
+				if (objA0.animation.sprite == 0x02)
+					Wario.laughTimer = 0
+				key = stringformat("eggman-fbz-blue-%02x", objA0.animation.sprite)
+			}
+			
+			if (key != 0x00 && Renderer.hasCustomSprite(key))
+			{
+				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+				Renderer.drawCustomSprite(key, px, py, 0x10, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+				return true
+			}
+		}
+	}
+	
+	// LRZ2 Boss
 	else if (objA0.update_address == 0x079c1c)
 	{
 		u64 key = 0x00
-		if(objA0.animation.sprite == 0x0f)
+		if (objA0.animation.sprite == 0x0f)
 		{
-			if(EggmanBlue.showRegular())
-				key = stringformat("eggman-lrz-blue-%02x", (objA0.animation.sprite + EggmanBlue.getFreezableMetronome() * 0x03))
+			if (Wario.showRegular())
+				key = stringformat("eggman-lrz-blue-%02x", (objA0.animation.sprite + Wario.getFreezableMetronome() * 0x03))
 			else
-				key = stringformat("eggman-laugh-lrz-blue-%02x", (EggmanBlue.getMetronome() + (EggmanBlue.laughStyle * 0x02)))
+				key = stringformat("eggman-laugh-lrz-blue-%02x", Wario.getMetronome())
 		}
 		else 
 		{
-			if(objA0.animation.sprite == 0x10)
-			{
-				EggmanBlue.laughTimer = 0
-			}
+			if (objA0.animation.sprite == 0x10)
+				Wario.laughTimer = 0
 			key = stringformat("eggman-lrz-blue-%02x", objA0.animation.sprite)
 		}
-		if(EggmanBlue.spritesType)
-		{
-			key = stringformat("%s-png", key)
-		}
-		if(key != 0x00 && Renderer.hasCustomSprite(key))
+		
+		if (key != 0x00 && Renderer.hasCustomSprite(key))
 		{
 			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-			Renderer.drawCustomSprite(key, px, py, EggmanBlue.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+			Renderer.drawCustomSprite(key, px, py, 0x10, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
 			return true
 		}
 	}
 	
-	//FBZ2 Mini Boss and DEZ2 Boss
+	// FBZ2 Mini Boss and DEZ2 Boss
 	else if (objA0.update_address == 0x070068 || objA0.update_address == 0x07009a) 
 	{
-		if(objA0.mapping_offset != 0x186bb0) //Not Eggrobo
+		if (objA0.mapping_offset != 0x186bb0) // Not Eggrobo
 		{
 			u64 key = 0x00
-			if(objA0.animation.sprite < 0x02)
+			if (objA0.animation.sprite < 0x02)
 			{
-				if(EggmanBlue.showRegular())
+				if (Wario.showRegular())
 					key = stringformat("eggman-fbz-mini-blue-%02x", objA0.animation.sprite)
 				else
-					key = stringformat("eggman-laugh-fbz-mini-blue-%02x", (EggmanBlue.getMetronome() + (EggmanBlue.laughStyle * 0x02)))
+					key = stringformat("eggman-laugh-fbz-mini-blue-%02x", Wario.getMetronome())
 			}
 			else 
 			{
-				if(objA0.animation.sprite == 0x02) 
-				{
-					EggmanBlue.laughTimer = 0
-				}
+				if (objA0.animation.sprite == 0x02) 
+					Wario.laughTimer = 0
 				key = stringformat("eggman-fbz-mini-blue-%02x", objA0.animation.sprite)
 			}
-			if(EggmanBlue.spritesType)
-			{
-				key = stringformat("%s-png", key)
-			}
-			if(key != 0x00 && Renderer.hasCustomSprite(key))
+			
+			if (key != 0x00 && Renderer.hasCustomSprite(key))
 			{
 				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-				Renderer.drawCustomSprite(key, px, py, EggmanBlue.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+				Renderer.drawCustomSprite(key, px, py, 0x10, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
 				return true
 			}
 		}
 	}
 	
-	//LBZ2 1st Boss
-	else if(objA0.update_address == 0x073e0e)
+	// LBZ2 1st Boss
+	else if (objA0.update_address == 0x073e0e)
 	{
 		u64 key = 0x00
 		u8 animationSprite = objA0.animation.sprite
-		if(objA0.animation.sprite < 0x02)
+		if (objA0.animation.sprite < 0x02)
 		{
-			if(EggmanBlue.showRegular())
+			if (Wario.showRegular())
 				key = stringformat("eggman-blue-%02x", animationSprite)
 			else
-				key = stringformat("eggman-laugh-blue-%02x", (EggmanBlue.getMetronome() + (EggmanBlue.laughStyle * 0x02)))
+				key = stringformat("eggman-laugh-blue-%02x", Wario.getMetronome())
 		}
 		else 
 		{
-			if(objA0.animation.sprite == 0x02)
-			{
-				animationSprite += EggmanBlue.hurtAlign
-				EggmanBlue.laughTimer = 0
-			}
+			if (objA0.animation.sprite == 0x02)
+				Wario.laughTimer = 0
 			key = stringformat("eggman-blue-%02x", animationSprite)
 		}
-		if(EggmanBlue.spritesType)
-		{
-			key = stringformat("%s-png", key)
-		}
-		if(key != 0x00 && Renderer.hasCustomSprite(key))
-		{
-			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-			Renderer.drawCustomSprite(key, px, py, EggmanBlue.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
-			return true
-		}
-	}
 		
-	//AIZ2 Boss Intro
-	else if(objA0.update_address == 0x050700)
-	{
-		u64 key = stringformat("eggman-aiz-intro-%02x", EggmanBlue.getFreezableMetronome())
-		if(EggmanBlue.spritesType)
-		{
-			key = stringformat("%s-png", key)
-		}
-		if(Renderer.hasCustomSprite(key))
+		if (key != 0x00 && Renderer.hasCustomSprite(key))
 		{
 			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
 			Renderer.drawCustomSprite(key, px, py, 0x10, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
@@ -254,87 +203,26 @@ function bool EggmanBlue.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 		}
 	}
 	
-	//LRZ2 Boss Intro
-	else if(objA0.update_address == 0x079002 || objA0.update_address == 0x079072)
+	// Dr. Eggman outside the Eggmobile
+	else if (objA0.update_address == 0x080e02 || objA0.update_address == 0x0700ea || objA0.update_address == 0x073d74 || objA0.update_address == 0x07f74c) 
 	{
-		u64 key = 0x00
-		if(EggmanBlue.showRegular())
-			key = stringformat("eggman-lrz-intro-%02x", EggmanBlue.getFreezableMetronome())
-		else
-			key = stringformat("eggman-laugh-lrz-intro-%02x", (EggmanBlue.getMetronome() + (EggmanBlue.laughStyle * 0x02)))
-		if(EggmanBlue.spritesType)
+		if (objA0.mapping_offset != 0x186c20) // Not Eggrobo
 		{
-			key = stringformat("%s-png", key)
-		}
-		if(key != 0x00 && Renderer.hasCustomSprite(key))
-		{
-			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-			Renderer.drawCustomSprite(key, px, py, 0x10, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
-			return true
-		}
-	}
-	
-	//Dr. Eggman outside the Eggmobile
-	else if(objA0.update_address == 0x080e02 || objA0.update_address == 0x0700ea || objA0.update_address == 0x073d74 || objA0.update_address == 0x07f74c) 
-	{
-		if(objA0.mapping_offset != 0x186c20) //Not Eggrobo
-		{
-			u8 animationSprite = objA0.animation.sprite
-			
-			//For Misc Fixes and Tweaks Compability
-			s16 scaredConfig = EggmanBlue.getScaredConfig()	
-			if(objA0.animation.sprite < 0x04 && scaredConfig > 0)
-			{
-				if(global.zone_act == 0x0401 && (scaredConfig == 1 || scaredConfig == 3))
-				{
-					animationSprite += 0x04
-				}
-				else if((global.zone_act == 0x0b01 || global.zone_act == 0x1700) && (scaredConfig == 2 || scaredConfig == 3))
-				{
-					animationSprite += 0x04
-				}
-			}
-			
-			u64 key = stringformat("character-eggman-blue-%02x", animationSprite)
-			if(EggmanBlue.spritesType)
-			{
-				key = stringformat("%s-png", key)
-			}
-			if(Renderer.hasCustomSprite(key))
+			u64 key = stringformat("character-eggman-blue-%02x", objA0.animation.sprite)
+			if (Renderer.hasCustomSprite(key))
 			{
 				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-				Renderer.drawCustomSprite(key, px, py, EggmanBlue.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+				Renderer.drawCustomSprite(key, px, py, 0x10, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
 				return true
 			}
 		}
 	}
 	
-	//Dr. Eggman outside the Eggmobile - single lost frame in LBZ2
-	//Some other sprites, like some explosions, use this update_address
-	else if(objA0.update_address == 0x01abb6 && objA0.animation.sprite == 0x00 && global.zone_act == 0x0601) 
-	{
-		u64 key = "character-eggman-blue-03"
-		if(EggmanBlue.spritesType)
-		{
-			key = stringformat("%s-png", key)
-		}
-		if(Renderer.hasCustomSprite(key))
-		{
-			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-			Renderer.drawCustomSprite(key, px, py, EggmanBlue.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
-			return true
-		}
-	}
-	
-	//Bad Ending and Blue Sphere Dificulty Screen
-	else if(objA0.update_address == 0x05f5b4 || objA0.update_address == 0x05fb90)
+	// Bad Ending and Blue Sphere Difficulty Screen
+	else if (objA0.update_address == 0x05f5b4 || objA0.update_address == 0x05fb90)
 	{
 		u64 key = stringformat("eggman-ending-blue-%02x", objA0.animation.sprite)
-		if(EggmanBlue.spritesType || objA0.update_address == 0x05f5b4)
-		{
-			key = stringformat("%s-png", key)
-		}
-		if(Renderer.hasCustomSprite(key))
+		if (Renderer.hasCustomSprite(key))
 		{
 			u16 atex = (objA0.update_address == 0x05fb90 ? 0x00 : 0x10)
 			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
@@ -342,659 +230,114 @@ function bool EggmanBlue.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 			return true
 		}
 	}
-		
+	
 	// Eggman in Savedata Screen
-	else if(objA0.update_address == 0x00d782)
+	else if (objA0.update_address == 0x00d782)
 	{
-		u64 key
-		if(EggmanBlue.getShineConfig() != 3)
-		{
-			key = stringformat("eggman-delete-%x%x", objA0.animation.sprite, u8[0xffffb0b1])
-			if(EggmanBlue.spritesType)
-			{
-				key = stringformat("%s-png", key)
-			}	
-		}
-		else
-		{
-			//Try to render sprite from Misc Fixes & Tweaks
-			key = stringformat("robotnik_dataselect_%x%x", objA0.animation.sprite, u8[0xffffb0b1])
-		}
-		if(Renderer.hasCustomSprite(key))
+		u64 key = stringformat("eggman-delete-%x%x", objA0.animation.sprite, u8[0xffffb0b1])
+		if (Renderer.hasCustomSprite(key))
 		{
 			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
 			Renderer.drawCustomSprite(key, px, py, 0x00, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
-			if(EggmanBlue.isMiscFixesHere())
-			{
-				u64 key2 = stringformat("eggman-delete-1%x", EggmanBlue.getShineConfig())
-				if(EggmanBlue.spritesType)
-				{
-					key2 = stringformat("%s-png", key2)
-				}	
-				if(Renderer.hasCustomSprite(key2))
-				{
-					Renderer.drawCustomSprite(key2, px, py, 0x00, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue+1)
-				}
-			}
 			return true
 		}
 	}
-	
-	//MGZ2 Boss zoomout animation
-	//objA0.animation.sprite here go from 0x04 to 0x1c
-	//Write your sprite's json for "eggman-zoomout-blue-04", "eggman-zoomout-blue-05" ... to "eggman-zoomout-blue-1c"
-	else if(objA0.update_address == 0x06d060)
-	{
-		u64 key = stringformat("eggman-zoomout-blue-%02x", objA0.animation.sprite)
-		if(Renderer.hasCustomSprite(key))
-		{
-			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-			Renderer.drawCustomSprite(key, px, py, 0x10, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
-			return true
-		}
-		//Alternative usage with a single sprite and scalling done with scripting
-		//Might be improved in the future
-		key = stringformat("eggman-zoomout-blue-%02x", EggmanBlue.getFreezableMetronome())
-		if(!Renderer.hasCustomSprite(key))
-			key = "eggman-zoomout-blue"
-		if(Renderer.hasCustomSprite(key))
-		{
-			s32 scale = (0x010000 - (objA0.animation.sprite * 0x800))
-			if(scale < 0x002800)
-				scale = 0x002800
-			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-			Renderer.drawCustomSprite(key, px, py, 0x00, (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue, 0, 0xffffffff, scale)
-			return true
-		}
-	}
-		
-    else if(objA0.update_address == 0x0837b2)
-    {
-		u64 plateName = 0x00
-		if(objA0.animation.sprite == 0x03)
-		{
-			plateName = stringformat("eggman-goal-sign-%02x", (objA0.animation.sprite + (EggmanBlue.cdStyledGoal * 0x10)))
-		}
-		if(plateName != 0x00 && Renderer.hasCustomSprite(plateName))
-		{
-			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-			Renderer.drawCustomSprite(plateName, px, py, EggmanBlue.getDefaultPal(), prioFlag ? SPRITE_FLAG_PRIO : 0 , renderQueue)
-			return true
-		}
-    }
-	
-	else if(objA0.update_address == 0x04d9ec)
-	{
-		u64 key = 0x00
-		if(objA0.animation.sprite == 0x07 || objA0.animation.sprite == 0x08)
-		{
-			key = stringformat("eggman-blue-sphere-%02x", objA0.animation.sprite)
-		}
-		if(key != 0x00 && Renderer.hasCustomSprite(key))
-		{
-			Renderer.drawCustomSprite(key, px, py, 0x00, 0x00 , renderQueue)
-			return true
-		}
-	}
-	
-	//System.writeDisplayLine(stringformat("%x %x",objA0.update_address,objA0.animation.sprite))
-	return false
+
+	return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
 }
 
-
-function void Renderer.drawCustomSprite(u64 key, s16 px, s16 py, u8 atex, u8 flags, u16 renderQueue) 
-{
-	//For Misc Fixes and Tweaks
-	if(!EggmanBlue.legacyContinueMode) 
-	{
-		if(key == "robotnik_cont_00" || key == "robotnik_cont_01" || key == "robotnik_cont_02" || key == "robotnik_cont_03") 
-		{
-			//Ensure that the replacement sprite is flipped in the continue (Dr. Eggman sprites face left by default)
-			flags = flags | 0x01
-			//Dr. Eggman is taller than Knuckles, so this will recenter the sprite
-			py -= 0x09
-			if(EggmanBlue.spritesType)
-			{
-				u64 newKey = stringformat("%s-png", key)
-				if(Renderer.hasCustomSprite(newKey))
-				{
-					key = newKey
-				}
-			}
-		}
-	}
-
-	// For Mecha Mk. I Boss
-	if(!EggmanBlue.disableMarkIAnimationsMod)
-	{
-		if(key == "msmk1_Eggman") 
-		{
-			u64 newKey = 0x00
-			if(EggmanBlue.showRegular())
-				newKey = stringformat("msmk1-Blue-Eggman-%02x", EggmanBlue.getFreezableMetronome())
-			else
-				newKey = stringformat("msmk1-Blue-Eggman-Laugh-%02x", EggmanBlue.getMetronome())
-			if(Renderer.hasCustomSprite(newKey))
-			{
-				key = newKey
-				atex = EggmanBlue.getDefaultPal()
-			}
-		} 
-		else if(key == "msmk1_Eggman_Leave")
-		{
-			u64 newKey = System.getGlobalVariableValueByName("MSMKI.Defeated") ? "msmk1-Blue-Eggman-Defeat" : "msmk1-Blue-Eggman-Hurt"
-			if(Renderer.hasCustomSprite(newKey))
-			{
-				EggmanBlue.laughTimer = 0
-				key = newKey
-				atex = EggmanBlue.getDefaultPal()
-			}
-		}
-	}
-
-	base.Renderer.drawCustomSprite(key, px, py, atex, flags, renderQueue)
-}
-
-//For LBZ Eggman Fleeing
-function void Renderer.drawCustomSprite(u64 key, s16 px, s16 py, u8 atex, u8 flags, u16 renderQueue, u8 angle, u32 tint, s32 scale)
-{
-	if(!EggmanBlue.spritesType)
-	{
-		if(key == "eggmanlost1" || key == "eggmanlost2" || key == "eggmanlost3" || key == "eggmanlost4" || key == "eggmanlost5" || key == "eggmanlost6")
-		{
-			u64 newKey = stringformat("%s-bmp", key)
-			if(Renderer.hasCustomSprite(newKey))
-			{
-				key = newKey
-				atex = 0x00
-			}
-		}
-	}
-	base.Renderer.drawCustomSprite(key, px, py, atex, flags, renderQueue, angle, tint, scale)
-}
-
-function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
-{
-	if(EggmanBlue.onWriteToSpriteTable(px, py,renderQueue))
-		return true
-	else if(base.Standalone.onWriteToSpriteTable(px, py, renderQueue))
-		return true
-	else
-		return false
-}
-
+// Monitor Icon Replacement
 function u64 Monitor.getIconSpriteKey(u8 type)
 {
-	if (type == 0x02 && EggmanBlue.disableMonitorReplacement != 1)
+	if (type == 0x02) // Eggman Monitor
 	{
 		return "monitor_icon_eggman"
 	}
 	return base.Monitor.getIconSpriteKey(type)
 }
 
-function bool EggmanBlue.showRegular()
-{
-	bool gameOverCondition = ((global.time_over == 0 && lives_counter > 0) || EggmanBlue.disableDeadLaugh == 1)
-	return (EggmanBlue.laughTimer <= 0 && gameOverCondition)
-}
-
-function void EggmanBlue.decreaseTimer()
-{
-	if(EggmanBlue.laughTimer > 0) 
-	{
-		u16 fc = level.framecounter
-		if(EggmanBlue.lastFrame != fc)
-		{
-			EggmanBlue.lastFrame = fc
-			--EggmanBlue.laughTimer
-		}
-	}
-}
-
-//# address-hook(0x010a94) end(0x010ae8)
+// Update hooks to decrease laugh timer
 function void Character.BaseUpdate.Sonic()
 {
-	if(isMainCharacter(CHARACTER_SONIC))
-	{
-		EggmanBlue.decreaseTimer()
-	}
+	if (isMainCharacter(CHARACTER_SONIC))
+		Wario.decreaseTimer()
 	base.Character.BaseUpdate.Sonic()
 }
 
-//# address-hook(0x01365c) end(0x0136b8)
 function void Character.BaseUpdate.Tails()
 {
-	if(isMainCharacter(CHARACTER_TAILS))
-	{
-		EggmanBlue.decreaseTimer()
-	}
+	if (isMainCharacter(CHARACTER_TAILS))
+		Wario.decreaseTimer()
 	base.Character.BaseUpdate.Tails()
 }
 
-//# address-hook(0x016444) end(0x016498)
 function void Character.BaseUpdate.Knuckles()
 {
-	if(isMainCharacter(CHARACTER_KNUCKLES))
-	{
-		EggmanBlue.decreaseTimer()
-	}
+	if (isMainCharacter(CHARACTER_KNUCKLES))
+		Wario.decreaseTimer()
 	base.Character.BaseUpdate.Knuckles()
 }
 
-//# address-hook(0x010294) end(0x010364)
+// Laughing on hurt/death
 function void Character.GettingHurt()
 {
 	base.Character.GettingHurt()
-	//EggmanBlue.laughTimer < 64 is to avoid 2nd player Tails cutting death laughs short
-	if(char.state == char.state.GOT_HURT && EggmanBlue.laughTimer < 64 && EggmanBlue.disableHurtLaugh != 1)
-	{
-		EggmanBlue.laughTimer = 64
-	}
+	if (char.state == char.state.GOT_HURT && Wario.laughTimer < 64)
+		Wario.laughTimer = 64
 }
 
-function void EggmanBlue.DeathLaugh()
+function void Wario.DeathLaugh()
 {
-	if(char.state == char.state.DIED && EggmanBlue.disableDeadLaugh != 1)
+	if (char.state == char.state.DIED)
 	{
-		if(A0 == 0xffffb000) //This is true if it's the first player dying
-		{
-			EggmanBlue.laughTimer = 176
-		}
-		else if(EggmanBlue.laughTimer < 64) //To avoid 2nd player Tails cutting death laughs short
-		{
-			EggmanBlue.laughTimer = 64 //if 2nd Player dies it's regular laugh time
-		}
+		if (A0 == 0xffffb000) // First player
+			Wario.laughTimer = 176
+		else if (Wario.laughTimer < 64)
+			Wario.laughTimer = 64
 	}
 }
 
-//# address-hook(0x01036e) end(0x0103b8)
 function void Character.Die_internal()
 {
 	base.Character.Die_internal()
-	EggmanBlue.DeathLaugh()
+	Wario.DeathLaugh()
 }
 
-//# address-hook(0x010366) end(0x01036c)
 function void Character.Die()
 {
 	base.Character.Die()
-	EggmanBlue.DeathLaugh()
+	Wario.DeathLaugh()
 }
 
-function void EggmanBlue.KnucklesTasedLaugh()
+// Boss start laughing triggers
+function void Wario.BossStartLaughValue(u8 value)
 {
-	//For HPZ
-	if(EggmanBlue.disableHurtLaugh != 1)
-		if(EggmanBlue.disableEventLaugh == 1)
-		{
-			EggmanBlue.laughTimer = 64
-		}
-}
-
-//# address-hook(0x0654fa) end(0x06554a)
-function void fn0654fa()
-{
-	EggmanBlue.KnucklesTasedLaugh()
-	base.fn0654fa()
-}
-
-//# address-hook(0x065564) end(0x0655a6)
-function void fn065564()
-{
-	EggmanBlue.KnucklesTasedLaugh()
-	base.fn065564()
-}
-
-//# address-hook(0x07764e) end(0x077668)
-function void fn07764e()
-{
-	EggmanBlue.golemRemaining_hits = boss.remaining_hits
-	base.fn07764e()
-}
-
-function void EggmanBlue.BossStartLaugh()
-{
-	EggmanBlue.BossStartLaughValue(64)
-}
-
-function void EggmanBlue.BossStartLaughValue(u8 value)
-{
-	if(EggmanBlue.bossInit > 1) 
+	if (Wario.bossInit > 0) 
 	{
-		EggmanBlue.bossInit--
-		return
+		--Wario.bossInit
+		if (Wario.laughTimer < value) 
+			Wario.laughTimer = value 
 	}
-	else if(EggmanBlue.bossInit > 0) 
-	{
-		EggmanBlue.bossInit--
-		if(EggmanBlue.disableEventLaugh != 1)
-			if(EggmanBlue.laughTimer < value) 
-				EggmanBlue.laughTimer = value 
-	}
-	return
 }
 
+// Hook boss initialization to trigger laughs
 //# address-hook(0x0691c8) end(0x069222)
 function void fn0691c8()
 {
-	//AIZ2 Boss
+	// AIZ2 Boss
 	u16 positionX = u16[0xfffffa82]
-	if (positionX > camera.position.x.u16)
-		return
-
-	EggmanBlue.bossInit = 1
+	if (positionX <= camera.position.x.u16)
+		Wario.bossInit = 1
 	base.fn0691c8()
 }
 
 //# address-hook(0x0692e2) end(0x069300)
 function void fn0692e2()
 {
-	//AIZ2 Boss
-	EggmanBlue.BossStartLaugh()
+	Wario.BossStartLaughValue(64)
 	base.fn0692e2()
 }
 
-//# address-hook(0x06af32) end(0x06af6e)
-function void fn06af32()
-{
-	//HCZ2 Boss
-	EggmanBlue.bossInit = 1
-	base.fn06af32()
-}
-
-//# address-hook(0x06af80) end(0x06afb2)
-function void fn06af80()
-{
-	//HCZ2 Boss
-	EggmanBlue.BossStartLaugh()
-	base.fn06af80()
-}
-
-//# address-hook(0x06bf82) end(0x06bf96)
-function void fn06bf82()
-{
-	//MGZ2 Boss Events Stage
-	EggmanBlue.bossInit = 1
-	EggmanBlue.BossStartLaugh()
-	base.fn06bf82()
-}
-
-//# address-hook(0x06c354) end(0x06c3e0)
-function void fn06c354()
-{
-	//MGZ2 Boss
-	EggmanBlue.bossInit = 1
-	base.fn06c354()
-}
-
-//# address-hook(0x06c3e6) end(0x06c3e6)
-function void fn06c3e6()
-{
-	//MGZ2 Boss
-	base.fn06c3e6()
-	if(objA0.base_state == 0x0a)
-		EggmanBlue.BossStartLaugh()
-}
-
-//# address-hook(0x06e4f2) end(0x06e542)
-function void fn06e4f2()
-{
-	//CNZ2 Boss
-	EggmanBlue.bossInit = 1
-	base.fn06e4f2()
-}
-
-//# address-hook(0x06e574) end(0x06e59e)
-function void fn06e574()
-{
-	//CNZ2 Boss
-	EggmanBlue.BossStartLaugh()
-	base.fn06e574()
-}
-
-//# address-hook(0x071c36) end(0x071c72)
-function void fn071c36()
-{
-	//ICZ2 Boss
-	EggmanBlue.bossInit = 1
-	base.fn071c36()
-}
-
-//# address-hook(0x071caa) end(0x071ce6)
-function void fn071caa()
-{
-	//ICZ2 Boss
-	EggmanBlue.BossStartLaugh()
-	base.fn071caa()
-}
-
-//# address-hook(0x08cb9e) end(0x08cbec)
-function void fn08cb9e()
-{
-	//LBZ1 Pre-Boss 1
-	EggmanBlue.bossInit = 1
-	base.fn08cb9e()
-}
-
-//# address-hook(0x08cc2e) end(0x08cc54)
-function void fn08cc2e()
-{
-	//LBZ1 Pre-Boss 1
-	EggmanBlue.BossStartLaugh()
-	base.fn08cc2e()
-}
-
-//# address-hook(0x08ccb4) end(0x08cce6)
-function void fn08ccb4()
-{
-	//LBZ1 Pre-Boss 2
-	EggmanBlue.bossInit = 1
-	base.fn08ccb4()
-}
-
-//# address-hook(0x08cd30) end(0x08cd4a)
-function void fn08cd30()
-{
-	//LBZ1 Pre-Boss 2
-	EggmanBlue.BossStartLaughValue(96)
-	base.fn08cd30()
-}
-
-//# address-hook(0x073906) end(0x073954)
-function void fn073906()
-{
-	//LBZ2 Boss 1
-	EggmanBlue.bossInit = 1
-	base.fn073906()
-}
-
-//# address-hook(0x0739e6) end(0x0739ec)
-function void fn0739e6()
-{
-	//LBZ2 Boss 1
-	EggmanBlue.BossStartLaugh()
-	base.fn0739e6()
-}
-
-//# address-hook(0x0729de) end(0x072a4e)
-function void fn0729de()
-{
-	//LBZ2 Boss 2
-	EggmanBlue.bossInit = 1
-	base.fn0729de()
-}
-
-//# address-hook(0x072a70) end(0x072ae6)
-function void fn072a70()
-{
-	//LBZ2 Boss 2
-	EggmanBlue.BossStartLaughValue(96)
-	base.fn072a70()
-}
-
-//# address-hook(0x07432a) end(0x07435a)
-function void fn07432a()
-{
-	//LBZ2 Boss 3
-	EggmanBlue.bossInit = 1
-	EggmanBlue.BossStartLaughValue(128)
-	base.fn07432a()
-}
-
-//# address-hook(0x074894) end(0x07489a)
-function void fn074894()
-{
-	//LBZ2 Boss 3 Defeated - Knuckles Path
-	EggmanBlue.bossInit = 1
-	EggmanBlue.BossStartLaughValue(8)
-	base.fn074894()
-}
-
-//# address-hook(0x075f50) end(0x075fce)
-function void fn075f50()
-{
-	//MHZ2 Boss
-	EggmanBlue.bossInit = 1
-	base.fn075f50()
-}
-
-//# address-hook(0x076062) end(0x076068)
-function void fn076062()
-{
-	//MHZ2 Boss
-	EggmanBlue.BossStartLaugh()
-	base.fn076062()
-}
-
-//# address-hook(0x06fdc0) end(0x06fdfa)
-function void fn06fdc0()
-{
-	//FBZ2 Boss 1
-	EggmanBlue.bossInit = 1
-	EggmanBlue.BossStartLaugh()
-	base.fn06fdc0()
-}
-
-//# address-hook(0x07065c) end(0x0706a6)
-function void fn07065c()
-{
-	//FBZ2 Boss 2
-	EggmanBlue.bossInit = 1
-	base.fn07065c()
-}
-
-//# address-hook(0x0706ac) end(0x0706e0)
-function void fn0706ac()
-{
-	//FBZ2 Boss 2
-	EggmanBlue.BossStartLaughValue(96)
-	base.fn0706ac()
-}
-
-//# address-hook(0x07981e) end(0x079852)
-function void fn07981e()
-{
-	//LRZ2 Boss
-	EggmanBlue.bossInit = 1
-	base.fn07981e()
-}
-
-//# address-hook(0x079858) end(0x0798b6)
-function void fn079858()
-{
-	//LRZ2 Boss
-	EggmanBlue.BossStartLaugh()
-	base.fn079858()
-}
-
-//# address-hook(0x064460) end(0x064470)
-function void fn064460()
-{
-	//HPZ 1st
-	EggmanBlue.bossInit = 1
-	base.fn064460()
-}
-
-//# address-hook(0x064610) end(0x06463a)
-function void fn064610()
-{
-	//HPZ 1st
-	EggmanBlue.BossStartLaughValue(96)
-	EggmanBlue.bossInit = 1
-	base.fn064610()
-}
-
-//# address-hook(0x0648b2) end(0x0648b2)
-function void fn0648b2()
-{
-	//HPZ 2nd
-	base.fn0648b2()
-	EggmanBlue.bossInit = 1
-	EggmanBlue.BossStartLaughValue(128)
-}
-
-function void MSMKI.Intitalize()
-{
-	//DEZ1 Mecha MK. I Boss
-	EggmanBlue.bossInit = 1
-	base.MSMKI.Intitalize()
-}
-
-//#address-hook(0x31433C)
-function void MSMKI.BaseUpdate()
-{
-	//DEZ1 Mecha MK. I Boss
-	if(System.getGlobalVariableValueByName("MSMKI.EggmanDoorFrame") > 0)
-		EggmanBlue.BossStartLaugh()
-	base.MSMKI.BaseUpdate()
-}
-
-//# address-hook(0x07f10e) end(0x07f14e)
-function void fn07f10e()
-{
-	//DEZ2 Boss 1
-	EggmanBlue.bossInit = 1
-	base.fn07f10e()
-}
-
-//# address-hook(0x07f150) end(0x07f156)
-function void fn07f150()
-{
-	//DEZ2 Boss 1
-	EggmanBlue.BossStartLaugh()
-	base.fn07f150()
-}
-
-//# address-hook(0x080184) end(0x0801d4)
-function void fn080184()
-{
-	//DEZ2 Boss Escape
-	EggmanBlue.bossInit = 1
-	base.fn080184()
-}
-
-//# address-hook(0x0801d8) end(0x080202)
-function void fn0801d8()
-{
-	//DEZ2 Boss Escape
-	EggmanBlue.BossStartLaughValue(128)
-	base.fn0801d8()
-}
-
-//# address-hook(0x07ca3a) end(0x07caa4)
-function void fn07ca3a()
-{
-	//SSZ Knuckles Path
-	EggmanBlue.bossInit = 1
-	base.fn07ca3a()
-}
-
-//# address-hook(0x07caf8) end(0x07cb22)
-function void fn07caf8()
-{
-	//SSZ Knuckles Path
-	EggmanBlue.BossStartLaughValue(96)
-	base.fn07caf8()
-}
+// Add more boss hooks as needed...
 
 #endif
