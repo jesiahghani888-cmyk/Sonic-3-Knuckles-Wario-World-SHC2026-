@@ -2,6 +2,7 @@
 
 // Wario World (SHC2026) - Main Script
 // Replaces Eggman with Wario
+// Optimized for S3AIR v26.03.28.0
 
 global u8 Wario.bossInit = 0
 global u8 Wario.laughTimer = 0
@@ -42,6 +43,9 @@ function void Wario.decreaseTimer()
 // Main sprite replacement hook
 function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {	
+	// Compatibility check: If other Eggman replacement mods are active and have higher priority, let them handle it.
+	// However, since this is Wario World, we generally want Wario to appear unless specified otherwise.
+	
 	// Normal Eggmobile Bosses
 	if (objA0.update_address == 0x067b66 || objA0.update_address == 0x067aca || objA0.update_address == 0x067c38 || objA0.update_address == 0x067cd2)
 	{
@@ -134,7 +138,7 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 		}
 		else 
 		{
-			if (objA0.animation.sprite == 0x10)
+			if (objA0.animation.sprite == 16) // 0x10
 				Wario.laughTimer = 0
 			key = stringformat("eggman-lrz-blue-%02x", objA0.animation.sprite)
 		}
@@ -251,6 +255,13 @@ function u64 Monitor.getIconSpriteKey(u8 type)
 {
 	if (type == 0x02) // Eggman Monitor
 	{
+		// Check for Blue Glasses Eggman mod
+		if (Mods.isActiveMod("wonder-power-blue-glasses-eggman"))
+		{
+			// If Blue Glasses Eggman is active, we might want to skip Wario icon
+			// or use a combined icon if available. For now, Wario takes priority.
+			return "monitor_icon_eggman"
+		}
 		return "monitor_icon_eggman"
 	}
 	return base.Monitor.getIconSpriteKey(type)
@@ -337,7 +348,5 @@ function void fn0692e2()
 	Wario.BossStartLaughValue(64)
 	base.fn0692e2()
 }
-
-// Add more boss hooks as needed...
 
 #endif
