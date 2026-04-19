@@ -32,8 +32,7 @@
 			"DisplayName": "Pooka Party",
 			"IsRequired": "0",
 			"Priority": "Lower"
-		},
-		"wonder-power-blue-glasses-eggman": {
+		    	"wonder-power-blue-glasses-eggman": {
 			"DisplayName": "Blue Glasses Eggman",
 			"IsRequired": "0",
 			"Priority": "Lower"
