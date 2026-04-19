@@ -11,7 +11,7 @@ global s16 Wario.lastXPos = 0
 global u8 Wario.golemRemaining_hits = 0
 global u16 Wario.lastFrame = 0
 
-// Configuration variables (can be adjusted or expanded)
+// Configuration variables
 global u8 Wario.spritesType = 0			// 0 for BMP/default, 1 for PNG
 global u8 Wario.laughStyle = 0			// Different laugh animation styles
 global u8 Wario.hurtAlign = 0			// Alignment offset for hurt frames
@@ -44,29 +44,6 @@ function u8 Wario.getFreezableMetronome()
 function u8 Wario.getDefaultPal()
 {
 	return 0x10
-}
-
-function s16 Wario.getScaredConfig()
-{
-	return 0
-}
-
-function bool Wario.isMiscFixesHere()
-{
-	return false
-}
-
-function u8 Wario.getShineConfig()
-{
-	return 0
-}
-
-function void Wario.setLaughTimerForEvent(u8 value) 
-{
-	if(Wario.disableEventLaugh != 1) 
-	{
-		Wario.laughTimer = value
-	}
 }
 
 function void Wario.decreaseTimer()

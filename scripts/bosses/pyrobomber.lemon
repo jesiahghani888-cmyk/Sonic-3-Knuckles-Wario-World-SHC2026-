@@ -12,6 +12,7 @@ function bool Wario.PyroBomber.onWriteToSpriteTable(s16 px, s16 py, u16 renderQu
 		if (Wario.showRegular())
 		{
 			// Standard flying animation
+			// animationSprite 0-1 are the main flying frames
 			key = stringformat("pyrobomber-wario-%02x", (animationSprite % 2) + (Wario.getFreezableMetronome() * 2))
 		}
 		else
@@ -33,7 +34,7 @@ function bool Wario.PyroBomber.onWriteToSpriteTable(s16 px, s16 py, u16 renderQu
 	return false
 }
 
-// Hook into the main sprite table function
+// Override the base function to include our boss-specific logic
 function bool Wario.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
 	if (Wario.PyroBomber.onWriteToSpriteTable(px, py, renderQueue))
