@@ -1,0 +1,43 @@
+// Sonic 3 & Knuckles: Wario World - Pyro Bomber Script
+// Replaces Pyro Bomber with Wario
+
+function bool Wario.PyroBomber.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+	// Pyro Bomber update address is 0x081792
+	if (objA0.update_address == 0x081792)
+	{
+		u8 animationSprite = objA0.animation.sprite
+		u64 key = 0x00
+
+		if (Wario.showRegular())
+		{
+			// Standard flying animation
+			key = stringformat("pyrobomber-wario-%02x", (animationSprite % 2) + (Wario.getFreezableMetronome() * 2))
+		}
+		else
+		{
+			// Laughing animation
+			key = stringformat("pyrobomber-wario-laugh-%02x", (Wario.getMetronome() + (Wario.laughStyle * 2)))
+		}
+
+		if (Wario.spritesType)
+			key = stringformat("%s-png", key)
+
+		if (key != 0x00 && Renderer.hasCustomSprite(key))
+		{
+			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+			Renderer.drawCustomSprite(key, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+			return true
+		}
+	}
+	return false
+}
+
+// Hook into the main sprite table function
+function bool Wario.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+	if (Wario.PyroBomber.onWriteToSpriteTable(px, py, renderQueue))
+		return true
+
+	return base.Wario.onWriteToSpriteTable(px, py, renderQueue)
+}

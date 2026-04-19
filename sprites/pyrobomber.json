@@ -1,0 +1,18 @@
+{
+	"pyrobomber-wario-00":  { "File": "pyro_bomber_mobile.png", "Rect": "0,0,32,32", "Center": "16,16" },
+	"pyrobomber-wario-01":  { "File": "pyro_bomber_mobile.png", "Rect": "32,0,32,32", "Center": "16,16" },
+	"pyrobomber-wario-02":  { "File": "pyro_bomber_mobile.png", "Rect": "64,0,32,32", "Center": "16,16" },
+	"pyrobomber-wario-03":  { "File": "pyro_bomber_mobile.png", "Rect": "96,0,32,32", "Center": "16,16" },
+	"pyrobomber-wario-laugh-00":  { "File": "pyro_bomber_mobile.png", "Rect": "0,32,32,32", "Center": "16,16" },
+	"pyrobomber-wario-laugh-01":  { "File": "pyro_bomber_mobile.png", "Rect": "32,32,32,32", "Center": "16,16" },
+	"pyrobomber-wario-laugh-02":  { "File": "pyro_bomber_mobile.png", "Rect": "64,32,32,32", "Center": "16,16" },
+	"pyrobomber-wario-laugh-03":  { "File": "pyro_bomber_mobile.png", "Rect": "96,32,32,32", "Center": "16,16" },
+	"pyrobomber-wario-00-png":  { "File": "pyro_bomber_mobile.png", "Rect": "0,0,32,32", "Center": "16,16" },
+	"pyrobomber-wario-01-png":  { "File": "pyro_bomber_mobile.png", "Rect": "32,0,32,32", "Center": "16,16" },
+	"pyrobomber-wario-02-png":  { "File": "pyro_bomber_mobile.png", "Rect": "64,0,32,32", "Center": "16,16" },
+	"pyrobomber-wario-03-png":  { "File": "pyro_bomber_mobile.png", "Rect": "96,0,32,32", "Center": "16,16" },
+	"pyrobomber-wario-laugh-00-png":  { "File": "pyro_bomber_mobile.png", "Rect": "0,32,32,32", "Center": "16,16" },
+	"pyrobomber-wario-laugh-01-png":  { "File": "pyro_bomber_mobile.png", "Rect": "32,32,32,32", "Center": "16,16" },
+	"pyrobomber-wario-laugh-02-png":  { "File": "pyro_bomber_mobile.png", "Rect": "64,32,32,32", "Center": "16,16" },
+	"pyrobomber-wario-laugh-03-png":  { "File": "pyro_bomber_mobile.png", "Rect": "96,32,32,32", "Center": "16,16" }
+}
