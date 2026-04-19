@@ -47,6 +47,11 @@
 			"DisplayName": "Sonic 3 & Tenna",
 			"IsRequired": "0",
 			"Priority": "Lower"
+		},
+		"mrgrassman14-misc-fixes-and-tweaks": {
+			"DisplayName": "Misc. Fixes and Tweaks",
+			"IsRequired": "0",
+			"Priority": "Lower"
 		}
 	}
 }
