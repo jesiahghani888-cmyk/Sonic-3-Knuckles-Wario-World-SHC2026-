@@ -200,21 +200,29 @@ function bool Wario.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 		}
 	}
 	
-	// Goal Sign
-	else if(objA0.update_address == 0x0837b2)
-	{
-		u64 plateName = 0x00
-		if(objA0.animation.sprite == 0x03)
+// Goal Sign
+		else if(objA0.update_address == 0x0837b2)
 		{
-			plateName = stringformat("eggman-goal-sign-%02x", (objA0.animation.sprite + (Wario.cdStyledGoal * 0x10)))
+			u64 plateName = 0x00
+			if(objA0.animation.sprite == 0x03)
+			{
+				plateName = stringformat("eggman-goal-sign-%02x", (objA0.animation.sprite + (Wario.cdStyledGoal * 0x10)))
+			}
+			if(plateName != 0x00 && Renderer.hasCustomSprite(plateName))
+			{
+				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+				Renderer.drawCustomSprite(plateName, px, py, Wario.getDefaultPal(), prioFlag ? SPRITE_FLAG_PRIO : 0 , renderQueue)
+				return true
+			}
 		}
-		if(plateName != 0x00 && Renderer.hasCustomSprite(plateName))
-		{
-			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-			Renderer.drawCustomSprite(plateName, px, py, Wario.getDefaultPal(), prioFlag ? SPRITE_FLAG_PRIO : 0 , renderQueue)
+
+		// Pyro Bomber (FBZ1 Mini Boss)
+		if (Wario.PyroBomber.onWriteToSpriteTable(px, py, renderQueue))
 			return true
-		}
-	}
+
+		// FBZ1 Gapsule
+		if (Wario.FBZ1Gapsule.onWriteToSpriteTable(px, py, renderQueue))
+			return true
 
 	return false
 }

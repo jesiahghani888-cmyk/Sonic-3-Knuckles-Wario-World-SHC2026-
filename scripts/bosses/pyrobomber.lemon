@@ -1,5 +1,5 @@
-// Sonic 3 & Knuckles: Wario World - Pyro Bomber Script
-// Replaces Pyro Bomber with Wario
+// Sonic 3 & Knuckles: Wario World - Pyro Bomber & FBZ1 Gapsule Script
+// Replaces Pyro Bomber with Wario and FBZ1 Gapsule with Pyro Bomber Mobile
 
 function bool Wario.PyroBomber.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
@@ -12,7 +12,6 @@ function bool Wario.PyroBomber.onWriteToSpriteTable(s16 px, s16 py, u16 renderQu
 		if (Wario.showRegular())
 		{
 			// Standard flying animation
-			// animationSprite 0-1 are the main flying frames
 			key = stringformat("pyrobomber-wario-%02x", (animationSprite % 2) + (Wario.getFreezableMetronome() * 2))
 		}
 		else
@@ -45,11 +44,22 @@ function bool Wario.PyroBomber.onWriteToSpriteTable(s16 px, s16 py, u16 renderQu
 	return false
 }
 
-// Override the base function to include our boss-specific logic
-function bool Wario.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+function bool Wario.FBZ1Gapsule.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
-	if (Wario.PyroBomber.onWriteToSpriteTable(px, py, renderQueue))
-		return true
-
-	return base.Wario.onWriteToSpriteTable(px, py, renderQueue)
+	// FBZ1 Gapsule update address is 0x06ee72
+	if (objA0.update_address == 0x06ee72)
+	{
+		// Replace Gapsule with Pyro Bomber Mobile
+		u64 mobileKey = stringformat("pyrobomber_mobile_%02x", (level.framecounter >> 2) & 0x03)
+		if (Wario.spritesType)
+			mobileKey = stringformat("%s-png", mobileKey)
+		
+		if (Renderer.hasCustomSprite(mobileKey))
+		{
+			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+			Renderer.drawCustomSprite(mobileKey, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+			return true
+		}
+	}
+	return false
 }

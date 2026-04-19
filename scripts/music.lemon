@@ -1,12 +1,11 @@
 // Custom Music and Audio Logic
 function void playMusic(u8 musicId)
 {
-	// Example: Redirect specific boss music
-	// if (musicId == MUSIC_BOSS)
-	// {
-	// 	Audio.playMusic("custom_boss_music")
-	// 	return
-	// }
+	// Example: Redirect specific boss music for FBZ1
+	if (musicId == MUSIC_MINIBOSS_2 && global.zone_act == 0x0300)
+	{
+		// musicId = ...
+	}
 	
 	base.playMusic(musicId)
 }
