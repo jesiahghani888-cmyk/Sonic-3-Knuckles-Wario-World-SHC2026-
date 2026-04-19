@@ -8,49 +8,49 @@
 		"GameVersion": "26.03.28.0"
 	},
 	"OtherMods": {
-        	"newtrogic-pink-burner-standalone": {
+		"newtrogic-pink-burner-standalone": {
 			"DisplayName": "Pink Burner",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Lower"
 		},
-			"agent-stone-sonic-3-hazelspooder": {
+		"agent-stone-sonic-3-hazelspooder": {
 			"DisplayName": "Stone 3 A.I.R.",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Lower"
 		},
 		"his-name-is-mecha-not-silver-or-robo": {
 			"DisplayName": "Mecha Sonic Mk. i",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Lower"
 		},
 		"s3air_bosswarnings": {
 			"DisplayName": "Boss Warnings",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Higher"
 		},
 		"Pooka-Fest": {
 			"DisplayName": "Pooka Party",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Lower"
 		},
-	    	"wonder-power-blue-glasses-eggman": {
+		"wonder-power-blue-glasses-eggman": {
 			"DisplayName": "Blue Glasses Eggman",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Lower"
 		},
 		"Bossbar": {
 			"DisplayName": "Bossbar",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Lower"
 		},
-			"bob-sparker-3air": {
+		"bob-sparker-3air": {
 			"DisplayName": "Sonic 3 & Tenna",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Lower"
 		},
 		"mrgrassman14-misc-fixes-and-tweaks": {
 			"DisplayName": "Misc. Fixes and Tweaks",
-			"IsRequired": false,
+			"IsRequired": "0",
 			"Priority": "Lower"
 		}
 	}

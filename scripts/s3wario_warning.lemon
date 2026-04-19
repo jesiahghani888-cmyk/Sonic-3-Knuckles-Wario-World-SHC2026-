@@ -1,3 +1,5 @@
+global u16 bossWarningMod.yOffset1
+
 function void bossWarningMod.createWarningEffect.sonic3K()
 {
     playSound(0x86)
@@ -15,6 +17,8 @@ function void bossWarningMod.createWarningEffect.sonic3K()
         objA1.sprite_attributes = (sprite_attribute.PRIORITY | 0x06bc)
         objA1.render_flags = render_flag.WORLD
         objA1.sprite_priority = 0x100
+        
+        bossWarningMod.yOffset1 = 0
     }
 }
 
@@ -31,13 +35,13 @@ function void bossWarningMod.s3Warning.BaseUpdate()
 
     objA0.state++
 
-    if objA0.state < 24
+    if (objA0.state < 24)
         bossWarningMod.yOffset1 += 16
 
-    if objA0.state > 96
+    if (objA0.state > 96)
         bossWarningMod.yOffset1 -= 32
 
-    if objA0.state > 128
+    if (objA0.state > 128)
     {
 		objA0.animation.sprite = 0
 		Object.TriggerUnloading()
@@ -47,19 +51,29 @@ function void bossWarningMod.s3Warning.BaseUpdate()
 
 function bool Tenna.isPresent()
 {
-    return base.Tenna.isPresent()
+    return false // Default to false if Tenna mod is not present
 }
 
-function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+function bool Wario.Warning.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
     if (objA0.update_address == 0x319250)
     {
         SpriteHandle s3btext = Renderer.addSpriteHandle("bw_s3warn_text", getScreenWidth() / 2, getScreenHeight() + 224 - bossWarningMod.yOffset1, 0xe010)
         s3btext.setPriorityFlag(true)
-        s64 barspr = Tenna.isPresent() ? : "bw_s3warn_bar_w"
+        
+        u64 barspr = Tenna.isPresent() ? "bw_s3warn_bar_tenna" : "bw_s3warn_bar_w"
         SpriteHandle s3bbar = Renderer.addSpriteHandle(barspr, getScreenWidth() / 2, 0 - 192 + bossWarningMod.yOffset1, 0xe010)
         s3bbar.setPriorityFlag(true)
         return true
     }
+    return false
+}
+
+// Hook into the main Standalone sprite table function
+function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+    if (Wario.Warning.onWriteToSpriteTable(px, py, renderQueue))
+        return true
+        
     return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
 }

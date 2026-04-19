@@ -27,23 +27,23 @@ function bool Wario.PyroBomber.onWriteToSpriteTable(s16 px, s16 py, u16 renderQu
 		if (key != 0x00 && Renderer.hasCustomSprite(key))
 		{
 			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
-				Renderer.drawCustomSprite(key, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+			Renderer.drawCustomSprite(key, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
 
-				// Draw the mobile part (Pyro Bomber's base)
-				u64 mobileKey = stringformat("pyrobomber_mobile_%02x", (level.framecounter >> 2) & 0x03)
-				if (Wario.spritesType)
-					mobileKey = stringformat("%s-png", mobileKey)
-				
-				if (Renderer.hasCustomSprite(mobileKey))
-				{
-					Renderer.drawCustomSprite(mobileKey, px, py + 24, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue - 1)
-				}
-
-				return true
+			// Draw the mobile part (Pyro Bomber's base)
+			u64 mobileKey = stringformat("pyrobomber_mobile_%02x", (level.framecounter >> 2) & 0x03)
+			if (Wario.spritesType)
+				mobileKey = stringformat("%s-png", mobileKey)
+			
+			if (Renderer.hasCustomSprite(mobileKey))
+			{
+				Renderer.drawCustomSprite(mobileKey, px, py + 24, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue - 1)
 			}
+
+			return true
 		}
-		return false
 	}
+	return false
+}
 
 // Override the base function to include our boss-specific logic
 function bool Wario.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)

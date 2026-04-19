@@ -1,0 +1,18 @@
+// Custom Music and Audio Logic
+function void playMusic(u8 musicId)
+{
+	// Example: Redirect specific boss music
+	// if (musicId == MUSIC_BOSS)
+	// {
+	// 	Audio.playMusic("custom_boss_music")
+	// 	return
+	// }
+	
+	base.playMusic(musicId)
+}
+
+function bool Audio.onMusicEnding(u64 musicKey)
+{
+	// Handle music looping or transitions if needed
+	return base.Audio.onMusicEnding(musicKey)
+}

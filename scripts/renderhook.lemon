@@ -1,0 +1,220 @@
+// Main Sprite Hook for Wario Replacements
+function bool Wario.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{	
+	// Normal Eggmobile Bosses
+	if(objA0.update_address == 0x067b66 || objA0.update_address == 0x067aca || objA0.update_address == 0x067c38 || objA0.update_address == 0x067cd2)
+	{
+		if(objA0.mapping_offset != 0x0681d4) // Not Eggrobo
+		{
+			u64 key = 0x00
+			u8 animationSprite = objA0.animation.sprite
+			if(objA0.animation.sprite < 0x02)
+			{
+				Wario.lastXPos = 0
+				if(Wario.showRegular())
+				{
+					if (global.zone_act == 0x0601 && camera.position.y.u16 == 0x0668)
+						key = stringformat("eggman-blue-%02x", Wario.getFreezableMetronome())
+					else if (global.zone_act == 0x0801 && Wario.golemRemaining_hits == 0 && Wario.burnType > 0) 
+					{
+						u8 frame = Wario.getFreezableMetronome()
+						key = stringformat("eggman-blue-brn-%02x", (frame + (2 * Wario.burnType)))
+					}
+					else
+						key = stringformat("eggman-blue-%02x", animationSprite)
+				}
+				else
+				{
+					key = stringformat("eggman-laugh-blue-%02x", (Wario.getMetronome() + (Wario.laughStyle * 0x02)))
+				}
+			}
+			else if(objA0.animation.sprite == 0x03)
+			{
+				s16 xPos = camera.position.x.u16 + px
+				if(Wario.burnType > 0 && Wario.lastXPos != 0)
+				{
+					if((objA0.render_flags & render_flag.FLIP_X) ? (xPos > Wario.lastXPos) : (xPos < Wario.lastXPos))
+					{
+						if(global.zone_act != 0x0701 || camera.position.x.u16 < 0x4000 || camera.position.x.u16 > 0x4400) 
+						{
+							u8 frame = Wario.getFreezableMetronome()
+							key = stringformat("eggman-blue-brn-%02x", (frame + (2 * Wario.burnType)))
+						}
+					}
+				}
+				if(key == 0x00)
+				{
+					key = stringformat("eggman-blue-%02x", animationSprite)
+				}
+				Wario.lastXPos = xPos
+			}
+			else 
+			{
+				if(objA0.animation.sprite == 0x02)
+				{
+					animationSprite += Wario.hurtAlign
+					if(global.zone_act != 0x00160 || camera.position.x.u16 < 0x001700)
+						Wario.laughTimer = 0
+				}
+				key = stringformat("eggman-blue-%02x", animationSprite)
+			}
+			
+			if(Wario.spritesType)
+				key = stringformat("%s-png", key)
+
+			if(key != 0x00 && Renderer.hasCustomSprite(key))
+			{
+				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+				Renderer.drawCustomSprite(key, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+				return true
+			}
+		}
+	}
+	
+	// FBZ2 Second Boss
+	else if (objA0.update_address == 0x067b96)
+	{
+		if(!isMainCharacter(CHARACTER_KNUCKLES))
+		{
+			u64 key = 0x00
+			if(objA0.animation.sprite < 0x02)
+			{
+				Wario.lastXPos = 0
+				if(Wario.showRegular())
+					key = stringformat("eggman-fbz-blue-%02x", (objA0.animation.sprite + Wario.getFreezableMetronome() * 0x04))
+				else 
+					key = stringformat("eggman-laugh-fbz-blue-%02x", (Wario.getMetronome() + (Wario.laughStyle * 0x02)))
+			}
+			else if(objA0.animation.sprite == 0x03)
+			{
+				s16 xPos = camera.position.x.u16 + px
+				if(Wario.burnType > 0 && Wario.lastXPos != 0)
+				{
+					if((objA0.render_flags & render_flag.FLIP_X) ? (xPos > Wario.lastXPos) : (xPos < Wario.lastXPos))
+					{
+						u8 frame = Wario.getFreezableMetronome()
+						key = stringformat("eggman-blue-brn-%02x", (frame + (2 * Wario.burnType)))
+					}
+				}
+				if(key == 0x00)
+					key = stringformat("eggman-fbz-blue-%02x", objA0.animation.sprite)
+				Wario.lastXPos = xPos
+			}
+			else 
+			{
+				if(objA0.animation.sprite == 0x02)
+					Wario.laughTimer = 0
+				key = stringformat("eggman-fbz-blue-%02x", objA0.animation.sprite)
+			}
+			
+			if(Wario.spritesType)
+				key = stringformat("%s-png", key)
+
+			if(key != 0x00 && Renderer.hasCustomSprite(key))
+			{
+				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+				Renderer.drawCustomSprite(key, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+				return true
+			}
+		}
+	}
+	
+	// LRZ2 Boss
+	else if (objA0.update_address == 0x079c1c)
+	{
+		u64 key = 0x00
+		if(objA0.animation.sprite == 0x0f)
+		{
+			if(Wario.showRegular())
+				key = stringformat("eggman-lrz-blue-%02x", (objA0.animation.sprite + Wario.getFreezableMetronome() * 0x03))
+			else
+				key = stringformat("eggman-laugh-lrz-blue-%02x", (Wario.getMetronome() + (Wario.laughStyle * 0x02)))
+		}
+		else 
+		{
+			if(objA0.animation.sprite == 0x10)
+				Wario.laughTimer = 0
+			key = stringformat("eggman-lrz-blue-%02x", objA0.animation.sprite)
+		}
+		
+		if(Wario.spritesType)
+			key = stringformat("%s-png", key)
+
+		if(key != 0x00 && Renderer.hasCustomSprite(key))
+		{
+			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+			Renderer.drawCustomSprite(key, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+			return true
+		}
+	}
+	
+	// FBZ2 Mini Boss and DEZ2 Boss
+	else if (objA0.update_address == 0x070068 || objA0.update_address == 0x07009a) 
+	{
+		if(objA0.mapping_offset != 0x186bb0) // Not Eggrobo
+		{
+			u64 key = 0x00
+			if(objA0.animation.sprite < 0x02)
+			{
+				if(Wario.showRegular())
+					key = stringformat("eggman-fbz-mini-blue-%02x", objA0.animation.sprite)
+				else
+					key = stringformat("eggman-laugh-fbz-mini-blue-%02x", (Wario.getMetronome() + (Wario.laughStyle * 0x02)))
+			}
+			else 
+			{
+				if(objA0.animation.sprite == 0x02) 
+					Wario.laughTimer = 0
+				key = stringformat("eggman-fbz-mini-blue-%02x", objA0.animation.sprite)
+			}
+			
+			if(Wario.spritesType)
+				key = stringformat("%s-png", key)
+
+			if(key != 0x00 && Renderer.hasCustomSprite(key))
+			{
+				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+				Renderer.drawCustomSprite(key, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+				return true
+			}
+		}
+	}
+	
+	// Wario outside the Eggmobile
+	else if(objA0.update_address == 0x080e02 || objA0.update_address == 0x0700ea || objA0.update_address == 0x073d74 || objA0.update_address == 0x07f74c) 
+	{
+		if(objA0.mapping_offset != 0x186c20) // Not Eggrobo
+		{
+			u8 animationSprite = objA0.animation.sprite
+			u64 key = stringformat("character-eggman-blue-%02x", animationSprite)
+			
+			if(Wario.spritesType)
+				key = stringformat("%s-png", key)
+
+			if(Renderer.hasCustomSprite(key))
+			{
+				bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+				Renderer.drawCustomSprite(key, px, py, Wario.getDefaultPal(), (objA0.render_flags & 0x01) | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+				return true
+			}
+		}
+	}
+	
+	// Goal Sign
+	else if(objA0.update_address == 0x0837b2)
+	{
+		u64 plateName = 0x00
+		if(objA0.animation.sprite == 0x03)
+		{
+			plateName = stringformat("eggman-goal-sign-%02x", (objA0.animation.sprite + (Wario.cdStyledGoal * 0x10)))
+		}
+		if(plateName != 0x00 && Renderer.hasCustomSprite(plateName))
+		{
+			bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+			Renderer.drawCustomSprite(plateName, px, py, Wario.getDefaultPal(), prioFlag ? SPRITE_FLAG_PRIO : 0 , renderQueue)
+			return true
+		}
+	}
+
+	return false
+}
