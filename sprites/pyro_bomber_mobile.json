@@ -1,0 +1,11 @@
+{
+	"pyrobomber_mobile_00": { "File": "pyro_bomber_mobile.png", "Rect": "224,0,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_01": { "File": "pyro_bomber_mobile.png", "Rect": "224,32,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_02": { "File": "pyro_bomber_mobile.png", "Rect": "224,64,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_03": { "File": "pyro_bomber_mobile.png", "Rect": "224,96,40,32", "Center": "20,16" },
+
+	"pyrobomber_mobile_00-png": { "File": "pyro_bomber_mobile.png", "Rect": "224,0,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_01-png": { "File": "pyro_bomber_mobile.png", "Rect": "224,32,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_02-png": { "File": "pyro_bomber_mobile.png", "Rect": "224,64,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_03-png": { "File": "pyro_bomber_mobile.png", "Rect": "224,96,40,32", "Center": "20,16" }
+}
