@@ -1,6 +1,7 @@
 #if STANDALONE
 
 include shc_splash
+include s3wario_warning
 
 // Global variables for Wario's state
 global u8 Wario.bossInit = 0
