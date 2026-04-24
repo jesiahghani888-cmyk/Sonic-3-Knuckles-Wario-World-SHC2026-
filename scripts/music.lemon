@@ -1,10 +1,17 @@
 // Custom Music and Audio Logic
 function void playMusic(u8 musicId)
 {
-	// Example: Redirect specific boss music for FBZ1
+	// Replace MUSIC_MINIBOSS_2 with custom music for FBZ1 (zone_act 0x0300)
 	if (musicId == MUSIC_MINIBOSS_2 && global.zone_act == 0x0300)
 	{
-		// musicId = ...
+		// Assuming a custom music track for Pyro Bomber Mobile exists, e.g., "pyrobomber_boss_music"
+		// For now, let's use a placeholder or a generic boss music if available.
+		// A custom music track would need to be defined in audio_replacements.json and included in the mod.
+		// For demonstration, we'll use a generic boss music if one exists, or default to base.
+		// If a specific music key like "wario_boss_theme" is added to audio_replacements.json, it can be used here.
+		// For now, we'll let the base game handle it, or if a custom track is desired, it needs to be added to audio_replacements.json.
+		// Example: playMusic("wario_boss_theme") if defined.
+		// For now, we will not change the music, as no specific music key was provided.
 	}
 	
 	base.playMusic(musicId)

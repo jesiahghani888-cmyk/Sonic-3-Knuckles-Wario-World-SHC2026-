@@ -2,7 +2,7 @@
 
 include shc_splash
 include s3wario_warning
-// include bosses/pyrobomber
+include bosses/pyrobomber
 include bosses/pyrobomber_boss_fbz1
 include renderhook
 include music

@@ -17,5 +17,15 @@
 	"pyrobomber-wario-laugh-00-png": { "File": "character-eggman.png", "Rect": "0,56,64,56", "Center": "32,36" },
 	"pyrobomber-wario-laugh-01-png": { "File": "character-eggman.png", "Rect": "64,56,64,56", "Center": "32,36" },
 	"pyrobomber-wario-laugh-02-png": { "File": "character-eggman.png", "Rect": "128,56,64,56", "Center": "32,36" },
-	"pyrobomber-wario-laugh-03-png": { "File": "character-eggman.png", "Rect": "192,56,64,56", "Center": "32,36" }
+	"pyrobomber-wario-laugh-03-png": { "File": "character-eggman.png", "Rect": "192,56,64,56", "Center": "32,36" },
+
+	"pyrobomber_mobile_00": { "File": "pyro_bomber_mobile.png", "Rect": "224,0,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_01": { "File": "pyro_bomber_mobile.png", "Rect": "224,32,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_02": { "File": "pyro_bomber_mobile.png", "Rect": "224,64,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_03": { "File": "pyro_bomber_mobile.png", "Rect": "224,96,40,32", "Center": "20,16" },
+
+	"pyrobomber_mobile_00-png": { "File": "pyro_bomber_mobile.png", "Rect": "224,0,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_01-png": { "File": "pyro_bomber_mobile.png", "Rect": "224,32,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_02-png": { "File": "pyro_bomber_mobile.png", "Rect": "224,64,40,32", "Center": "20,16" },
+	"pyrobomber_mobile_03-png": { "File": "pyro_bomber_mobile.png", "Rect": "224,96,40,32", "Center": "20,16" }
 }
